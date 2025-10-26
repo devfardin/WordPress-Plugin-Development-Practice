@@ -32,7 +32,7 @@ class Admin_column
     public function init_hooks()
     {
 
-        // load_plugin_textdomain('admin-column', false, AC_PATH . 'i18n/');
+        load_plugin_textdomain('admin-column', false, plugin_dir_path(__FILE__). 'i18n/');
     }
 
 

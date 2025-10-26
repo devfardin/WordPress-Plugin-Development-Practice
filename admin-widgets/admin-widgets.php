@@ -40,11 +40,13 @@ class Admin_widgets
         include_once(WID_ADMIN_ASSETS_PATH . 'class-basic-admin-widget.php');
         include_once(WID_ADMIN_ASSETS_PATH . 'class-admin-function.php');
         include_once(WID_ADMIN_ASSETS_PATH . 'class-shortcode.php');
+        include_once(WID_ADMIN_ASSETS_PATH . 'class-nested-shortcode.php');
     }
     public function initialize() {
         new WID_Basic_Widget();
         new Class_admin_function();
         new Shortcode();
+        new WID_Nested_Shortcode();
     }
     
 }

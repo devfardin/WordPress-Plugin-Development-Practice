@@ -50,6 +50,12 @@ class WID_Basic_Widget
                 'description' => 'Review and moderate user comments',
             ],
             [
+                'title' => 'Manage Options',
+                'url' => admin_url('options.php'),
+                'icon' => '🛠️',
+                'description' => 'Access and configure advanced WordPress settings and site options.',
+            ],
+            [
                 'title' => 'Upload Media',
                 'url' => admin_url('media-new.php'),
                 'icon' => '🖼️',
