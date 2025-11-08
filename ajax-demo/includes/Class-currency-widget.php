@@ -98,18 +98,37 @@ class Dashboard_currency_widget
                 border-radius: 5px;
                 font-weight: 600;
             }
+            #error_message{
+                font-size: 16px;
+                font-weight: 500;
+                color: red;
+                margin-top: 15px;
+            }
         </style>
         <p><button id="currency-converter-btn">Get Currency Rates</button></p>
         <div id="currency-converter-result"></div>
 
         <div id="animation"></div>
+        <div id="error_message"></div>
         <?php
 
     }
     public function get_currency_rates()
     {
+        $nonce = sanitize_text_field($_POST['verify_none']);
+        if(!wp_verify_nonce($nonce, 'carrency')){
+            wp_send_json_error(value: 'Nonce validation field');
+        }
+        $transient_key = 'special_query_results';
+        $cashed_value = get_transient($transient_key);
+        if($cashed_value){
+            $cashed_value['CACHE'] = '1';
+            wp_send_json_success($cashed_value);
+        }
+
         $api_url = 'https://api.exchangerate-api.com/v4/latest/BDT';
         $response = wp_remote_get($api_url);
+
         if (!is_wp_error($response)) {
             $response_data = wp_remote_retrieve_body($response);
             $data = json_decode($response_data, true);
@@ -120,6 +139,7 @@ class Dashboard_currency_widget
                 'BGN' => number_format(1 / $data['rates']['BGN'], 2),
                 'CHF' => number_format(1 / $data['rates']['CHF'], 2),
             ];
+            set_transient($transient_key, $result, DAY_IN_SECONDS);
             wp_send_json_success($result);
         } else {
             wp_send_json_error('Fetch Failed');

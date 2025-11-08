@@ -17,8 +17,8 @@ Class Custom_column {
         $first_part = array_slice($columns, 0, 3, true);
 
         $second_part = array_slice($columns, 3, count($columns), true);
-        
         $first_part['price'] = esc_html("Price");
+        
         return array_merge($first_part, $second_part);
     }
     public function rander_columns($column_name, $id) {

@@ -46,6 +46,8 @@ class Contact_form_notifaction
         $subject = sanitize_text_field($_POST['subject']);
         $message = sanitize_text_field($_POST['message']);
 
+        check_ajax_referer('create_nonce__', 'contact_form_ajax');
+
         if(empty($name) || empty($email) || empty($subject) || empty($message)){
             wp_send_json_error('All Fields are required');
         }

@@ -20,6 +20,8 @@ Class Class_shortcode_button{
        return ob_get_clean();
     }
      public function demo_call() {
+        check_ajax_referer('nonce', 'verify_nonce' ); // nonce ==  wp_create_nonce('nonce')
+        //  //formData.append('verify_nonce', ajdm.create_nonce);
         wp_send_json_success('Received Ajax Call');
     }
 

@@ -90,7 +90,7 @@ function secure_plugin_form_handler()
     $sanitize['address'] = sanitize_textarea_field($sanitize['address']);
 
 
-        error_log('=================');
+    error_log('=================');
     error_log(print_r($form_data, true));
     error_log('===========================');
 

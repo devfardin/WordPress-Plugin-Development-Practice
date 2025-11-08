@@ -37,14 +37,21 @@ class Ajax_demo
     public function load_assets()
     {
         wp_enqueue_script('ajdm-main-js', AJDM_PLUGIN_URL . 'assets/js/ajax-demo.js', [], '1.0.0', true);
-        wp_localize_script('ajdm-main-js', 'ajdm', ['ajax_url'=> admin_url('admin-ajax.php')]);
+        wp_localize_script('ajdm-main-js', 'ajdm', [
+            'ajax_url'=> admin_url('admin-ajax.php'),
+            'create_nonce' => wp_create_nonce('nonce'),
+            'contact_nonce' => wp_create_nonce('create_nonce__')
+        ]);
     }
     public function load_admin_enqueue_script($hook) {
         if($hook !== 'index.php') {
             return;
         }
         wp_enqueue_script('admin-script-js', AJDM_PLUGIN_URL . 'assets/js/admin.js', [], time(), true);
-        wp_localize_script('admin-script-js', 'currency', ['ajax_url'=> admin_url('admin-ajax.php')]);
+        wp_localize_script('admin-script-js', 'currency', [
+            'ajax_url'=> admin_url('admin-ajax.php'),
+            'create_nonce' => wp_create_nonce('carrency'),
+        ]);
     }
 }
 new Ajax_demo();

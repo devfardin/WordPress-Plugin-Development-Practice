@@ -1,7 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('ajax-demo-btn').addEventListener('click', async function (event) {
+        console.log(ajdm.create_nonce);
+        
         const formData = new FormData();
         formData.append('action', 'demo')
+        formData.append('verify_nonce', ajdm.create_nonce);
         const response = await fetch(ajdm.ajax_url, {
             method: 'POST',
             body: formData,
@@ -17,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
            const formData = new FormData(this);
            formData.append('action', 'contact_form_ajax');
+           formData.append('contact_form_ajax', ajdm.contact_nonce);
            const response = await fetch(ajdm.ajax_url, {
             method: 'POST',
             body: formData,
