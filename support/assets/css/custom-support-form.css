@@ -22,7 +22,6 @@
   }
   .contact-card{
     width: 100%;
-    max-width: 720px;
     background: var(--card);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
