@@ -7,8 +7,13 @@ class Wp_database_form
         add_shortcode('rander_database_form', [$this, 'wp_database_form__']);
 
     }
-    public function wp_database_form__()
+    public function wp_database_form__($att)
     {
+        $atts = shortcode_atts(array(
+            'fields' => null,
+        ), $att);
+        
+        $fields = array_map('trim', explode(',', $atts['fields']));
         ob_start();
         ?>
 
@@ -17,9 +22,9 @@ class Wp_database_form
             <p class="lead">Please fill your details and upload the required files (resume, ID, certificates, etc.). Max file
                 size 10MB each.</p>
 
-    
-            <form class="employee-form" method="post"  enctype="multipart/form-data">
-                <div>
+
+            <form class="employee-form" method="post" enctype="multipart/form-data">
+                <!-- <div>
                     <label for="emp_name">Full name</label>
                     <input id="emp_name" name="name" type="text" placeholder="Jane Doe" required>
                 </div>
@@ -33,12 +38,24 @@ class Wp_database_form
                     <label for="emp_phone">Phone</label>
                     <input id="emp_phone" name="phone" type="text" placeholder="+8801XXXXXXXXX"
                         title="Use numbers, + and - only" required>
-                </div>
+                </div> -->
+                <?php
+                if (!empty($fields)) {
+                    foreach ($fields as $field) { ?>
+                        <div>
+                            <label for="<?php echo $field ?>"> <?php echo ucfirst($field) ?> </label>
+                            <input id="<?php echo $field ?>" name="<?php echo $field ?>" required>
+                        </div>
+                    <?php }
+                } else {
+                    echo "<div> No Fields are provide </div>";
+                }
+                ?>
 
-                <div>
+                <!-- <div>
                     <label for="emp_position">Position applied for</label>
                     <input id="emp_position" name="position" type="text" placeholder="e.g. Frontend Developer">
-                </div>
+                </div> -->
 
                 <div class="full select-wrap">
                     <label for="emp_department">Department</label>

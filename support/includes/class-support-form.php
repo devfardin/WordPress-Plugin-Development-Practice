@@ -8,10 +8,16 @@ class SUPPRT_CUSTOM_FORM
         add_action('wp_ajax_nopriv_support_form', [$this, 'custom_support_form_ajax']);
         add_action('wp_ajax_support_form', [$this, 'custom_support_form_ajax']);
     }
-    public function custom_support_form()
+    public function custom_support_form($att)
     {
-        ob_start(); ?>
+        $default = [
+            'fields' => null,
+        ];
+        $atts = shortcode_atts($default, $att);
 
+        $fields = array_map('trim', explode(',', $atts['fields']));
+
+        ob_start(); ?>
         <div class="contact-card" role="region" aria-labelledby="contactTitle">
             <div class="contact-header">
                 <div class="brand-dot">G</div>
@@ -23,7 +29,7 @@ class SUPPRT_CUSTOM_FORM
 
             <!-- the form (no JS required for HTML demonstration) -->
             <form class="contact-form" method="POST" action="support_form">
-                <div class="form-row">
+                <!-- <div class="form-row">
                     <label for="name">Name</label>
                     <input id="name" name="name" type="text" placeholder="Your full name">
                 </div>
@@ -41,11 +47,24 @@ class SUPPRT_CUSTOM_FORM
                 <div class="form-row">
                     <label for="phone">Address</label>
                     <input id="address" name="address" type="text" placeholder="Dhaka, Bangaldesh">
-                </div>
+                </div> -->
+                <?php
+                if (!empty($fields)) {
+                    foreach ($fields as $field) { ?>
+                        <div class="form-row">
+                            <label for="<?php echo esc_attr($field) ?>">
+                                <?php echo esc_html(ucfirst($field)) ?>
+                            </label>
+                            <input id="<?php echo esc_attr($field) ?>" name="<?php echo esc_attr($field) ?>">
+                        </div>
+                    <?php }
+                }
+                ?>
+                <input type="hidden" name="fields" value="<?php echo esc_attr( $atts['fields']) ?>">
                 <div class="form-row full">
                     <label for="priroty">Select Priroty</label>
                     <select name="priroty" id="priroty">
-                        <option value="low">Low</option >
+                        <option value="low">Low</option>
                         <option value="medium">Medium</option>
                         <option value="high">High</option>
                     </select>
@@ -74,15 +93,28 @@ class SUPPRT_CUSTOM_FORM
     public function custom_support_form_ajax()
     {
         parse_str($_REQUEST['form_data'], $form_data);
-        
+
 
 
         $name = sanitize_text_field($form_data['name']);
-        $email = sanitize_email($form_data['email']);
-        $phone = sanitize_text_field($form_data['phone']);
-        $address = sanitize_text_field($form_data['address']);
+        // $email = sanitize_email($form_data['email']);
+        // $phone = sanitize_text_field($form_data['phone']);
+        // $address = sanitize_text_field($form_data['address']);
         $message = sanitize_textarea_field($form_data['message']);
         $term = sanitize_text_field($form_data['priroty']);
+        $fields = sanitize_text_field($form_data['fields']);
+        $extra_fields = array_map('trim', explode(',', $fields));
+
+        foreach($extra_fields as $field) {
+            if(!empty($field && isset($form_data[$field]))){
+                $value = sanitize_text_field($form_data[$field]);
+                $Key = ucfirst($field);
+                $message .=   "\n{$Key}: {$value} ";
+            }
+        }
+        
+
+
 
         // print($phone);
 
@@ -98,9 +130,9 @@ class SUPPRT_CUSTOM_FORM
         check_ajax_referer('create_none', 'nonce');
 
         $post_id = wp_insert_post($post_data);
-        
+
         if (!is_wp_error($post_id)) {
-            if(isset($term)){
+            if (isset($term)) {
                 wp_set_post_terms($post_id, $term, 'priroty');
             }
             if (isset($name)) {

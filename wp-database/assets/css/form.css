@@ -59,9 +59,8 @@
     margin-bottom:6px;
   }
 
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"],
+
+  input,
   select,
   textarea {
     width:100%;
